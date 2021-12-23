@@ -1,4 +1,4 @@
-import { Denops, buffers } from "./deps.ts";
+import { Denops, buffers, globals } from "./deps.ts";
 
 export async function start(denops:Denops, path:String): Promise<void> {
   path = await denops.call("expand", path);
@@ -12,6 +12,9 @@ export async function start(denops:Denops, path:String): Promise<void> {
   let files:Array<String> = [];
 
   for await (const entry of Deno.readDir(path)) {
+
+    if(!await showHidden(denops) && entry.name.startsWith('.'))
+       continue;
 
     if(entry.isDirectory)
       entry.name+='/';
@@ -44,3 +47,9 @@ async function deleteBuf(denops:Denops): Promise<void> {
   await denops.cmd("setlocal modifiable");
   await denops.call("deletebufline","%",1,"$")
 }
+
+
+async function showHidden(denops:Denops): Promise<Boolean> {
+  return (await globals.get(denops,"defie_show_hidden") as Number === 1) ? true : false;
+}
+
