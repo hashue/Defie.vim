@@ -4,7 +4,8 @@ Version: beta
 Author: Hasu
 License: MIT license
 
-CONTENTS                          *defie-contents*
+CONTENTS						*defie-contents*
+
 Examples		|defie-example-settings|
 ==============================================================================
 EXAMPLES					*defie-example-settings*
