@@ -3,11 +3,11 @@ import { Denops, buffers, globals } from "./deps.ts";
 export async function start(denops:Denops, path:String): Promise<void> {
   path = await denops.call("expand", path);
 
-  await buffers.set(denops, "base_path", path+ '/');
-
   await denops.cmd(
     "setlocal filetype=defie buftype=nofile modifiable"
   );
+
+  await buffers.set(denops, "base_path", path+ '/');
 
   let files:Array<String> = [];
 
@@ -42,6 +42,17 @@ export async function defie_open(denops:Denops): Promise<void> {
     await denops.cmd(`call feedkeys(":\\<C-u>edit ${path}\\<CR>")`);
   }
 }
+
+//Move parent directory
+export async function defie_up(denops:Denops): Promise<void> {
+
+  let path = await buffers.get(denops, "base_path") as String;
+
+  path = await denops.call("fnamemodify",path.replace(/\/$/,""),":p:h:h:gs!\\!/!");
+
+  await denops.cmd(`call feedkeys(":\\<C-u>Defie ${path}\\<CR>")`);
+}
+
 
 async function deleteBuf(denops:Denops): Promise<void> {
   await denops.cmd("setlocal modifiable");
