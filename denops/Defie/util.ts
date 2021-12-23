@@ -1,4 +1,4 @@
-import { Denops, buffers, globals } from "./deps.ts";
+import { Denops, buffers } from "./deps.ts";
 
 export async function start(denops:Denops, path:String): Promise<void> {
   path = await denops.call("expand", path);
@@ -13,7 +13,7 @@ export async function start(denops:Denops, path:String): Promise<void> {
 
   for await (const entry of Deno.readDir(path)) {
 
-    if(entry.isDirectory) 
+    if(entry.isDirectory)
       entry.name+='/';
 
     files.push(entry.name);
@@ -24,15 +24,19 @@ export async function start(denops:Denops, path:String): Promise<void> {
 }
 
 
-//Open file
+//Open file or sub directory
 export async function defie_open(denops:Denops): Promise<void> {
   const base_path:String = await buffers.get(denops, "base_path") as String;
   let filename:String = await denops.call("getline",".") as String ;
   let path = await denops.call("fnamemodify", `${base_path}${filename}`, ":p") as String; 
 
-  deleteBuf(denops);
 
-  await denops.cmd(`call feedkeys(":\\<C-u>Defie ${path.replace(/\/$/,"")}\\<CR>")`);
+  if (path.endsWith('/')){
+    deleteBuf(denops);
+    await denops.cmd(`call feedkeys(":\\<C-u>Defie ${path.replace(/\/$/,"")}\\<CR>")`);
+  } else {
+    await denops.cmd(`call feedkeys(":\\<C-u>edit ${path}\\<CR>")`);
+  }
 }
 
 async function deleteBuf(denops:Denops): Promise<void> {
