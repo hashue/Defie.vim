@@ -1,4 +1,4 @@
-*Defie.vim* Vim/Neovim non-tree-view filer
+*Defie.vim* 		Vim/Neovim non-tree-view filer
 
 Version: beta
 Author: Hasu
