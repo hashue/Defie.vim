@@ -19,6 +19,7 @@ export async function start(denops:Denops, path:String): Promise<void> {
     files.push(entry.name);
   }
 
+  await denops.call("deletebufline","%",1,"$")
   await denops.call("setline", 1, files);
   await denops.cmd("setlocal nomodifiable");
 }
@@ -42,5 +43,4 @@ export async function defie_open(denops:Denops): Promise<void> {
 async function deleteBuf(denops:Denops): Promise<void> {
   await denops.cmd("setlocal modifiable");
   await denops.call("deletebufline","%",1,"$")
-  await denops.cmd("setlocal nomodifiable");
 }
