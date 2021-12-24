@@ -1,6 +1,6 @@
 import { Denops, buffers, globals, ensureString } from "./deps.ts";
 
-export async function start(denops:Denops, path:String): Promise<void> {
+export async function start(denops:Denops, path:string): Promise<void> {
   path = await denops.call("expand", path);
 
   await denops.cmd(
@@ -9,7 +9,7 @@ export async function start(denops:Denops, path:String): Promise<void> {
 
   await buffers.set(denops, "base_path", path+ '/');
 
-  let files:Array<String> = [];
+  let files:Array<string> = [];
 
   for await (const entry of Deno.readDir(path)) {
 
@@ -32,9 +32,9 @@ export async function start(denops:Denops, path:String): Promise<void> {
 
 //Open file or sub directory
 export async function defie_open(denops:Denops): Promise<void> {
-  const base_path:String = await buffers.get(denops, "base_path") as String;
-  let filename:String = await denops.call("getline",".") as String ;
-  let path = await denops.call("fnamemodify", `${base_path}${filename}`, ":p") as String; 
+  const base_path:string = await buffers.get(denops, "base_path") as string;
+  let filename:string = await denops.call("getline",".") as string ;
+  let path = await denops.call("fnamemodify", `${base_path}${filename}`, ":p") as string; 
 
 
   if (path.endsWith('/')){
@@ -48,7 +48,7 @@ export async function defie_open(denops:Denops): Promise<void> {
 //Move parent directory
 export async function defie_up(denops:Denops): Promise<void> {
 
-  let path = await buffers.get(denops, "base_path") as String;
+  let path = await buffers.get(denops, "base_path") as string;
 
   path = await denops.call("fnamemodify",path.replace(/\/$/,""),":p:h:h:gs!\\!/!");
 
@@ -62,19 +62,12 @@ async function deleteBuf(denops:Denops): Promise<void> {
 }
 
 
-async function showHidden(denops:Denops): Promise<Boolean> {
-  return (await globals.get(denops,"defie_show_hidden") as Number === 1) ? true : false;
+async function showHidden(denops:Denops): Promise<boolean> {
+  return (await globals.get(denops,"defie_show_hidden") as number === 1) ? true : false;
 }
 
-
-type open_direction = "tabnew" | "vsplit";
-
-async function initialize(denops:Denops, direction:open_direction): Promise<void> {
-  await denops.cmd(direction);
-}
-
-function sortAlphabet(array:Array<String>):Array<String> {
-  array = array.sort((a:String,b:String) => {
+function sortAlphabet(array:Array<string>):Array<string> {
+  array = array.sort((a:string,b:string) => {
     a = a.toLowerCase();
     b = b.toLowerCase();
     return (a > b) ? 1 : (b > a) ? -1 : 0;
