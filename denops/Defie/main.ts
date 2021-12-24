@@ -4,6 +4,7 @@ import { defie_open, defie_up, start } from "./util.ts";
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
     call_Defie(command: unknown, args: unknown): void {
+      console.log(args);
       ensureString(command, args);
 
       switch (args) {

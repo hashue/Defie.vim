@@ -31,8 +31,7 @@ export async function start(denops:Denops, path:String): Promise<void> {
 
 
 //Open file or sub directory
-export async function defie_open(denops:Denops,args:unknown): Promise<void> {
-  ensureString(args);
+export async function defie_open(denops:Denops): Promise<void> {
   const base_path:String = await buffers.get(denops, "base_path") as String;
   let filename:String = await denops.call("getline",".") as String ;
   let path = await denops.call("fnamemodify", `${base_path}${filename}`, ":p") as String; 
@@ -59,7 +58,7 @@ export async function defie_up(denops:Denops): Promise<void> {
 
 async function deleteBuf(denops:Denops): Promise<void> {
   await denops.cmd("setlocal modifiable");
-  await denops.call("silent","deletebufline","%",1,"$")
+  await denops.call("deletebufline","%",1,"$")
 }
 
 
