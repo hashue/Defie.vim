@@ -21,22 +21,18 @@ export async function start(denops: Denops, path: string): Promise<void> {
 }
 
 
-
 //Open file or sub directory
 export async function defie_open(denops: Denops): Promise<void> {
   let filename = await denops.call("getline", ".") as string;
-  let path = await denops.call(
-    "fnamemodify",
-    `${await fetchBasePath(denops)}${filename}`,
-    ":p",
-  ) as string;
+  let path = await makeFullPath(denops,filename) as string;
+  let cmd:string = "edit";
 
   if (path.endsWith("/")) {
+    cmd = "Defie";
     deleteBuf(denops);
-    callVimFeedKeys(denops, "Defie", path.replace(/\/$/, ""));
-  } else {
-    callVimFeedKeys(denops, "edit", path);
   }
+
+  callVimFeedKeys(denops, cmd, path.replace(/\/$/,""));
   await denops.cmd("setlocal modifiable");
 }
 
@@ -64,8 +60,9 @@ async function showHidden(denops: Denops): Promise<boolean> {
     : false;
 }
 
-async function fetchBasePath(denops: Denops): Promise<string> {
-  return await buffers.get(denops, "base_path") as string;
+async function makeFullPath(denops: Denops,filename:string): Promise<string> {
+  const base =  await buffers.get(denops, "base_path") as string;
+  return await denops.call("fnamemodify",`${base}${filename}`,":p");
 }
 
 async function callVimFeedKeys(denops:Denops, cmd:string, arg:string): Promise<void> {
