@@ -1,15 +1,15 @@
 import { Denops, ensureString } from "./deps.ts";
-import { defie_open, defie_up, start } from "./util.ts";
+import { defie_open, defie_up, start } from "./actions.ts";
 
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
-    call_Defie(command: unknown, args: unknown): void {
+    call_Defie(args: unknown): void {
       console.log(args);
-      ensureString(command, args);
+      ensureString(args);
 
       switch (args) {
         case "open":
-          defie_open(denops);
+          defie_open(denops,args);
           break;
         case "up":
           defie_up(denops);
