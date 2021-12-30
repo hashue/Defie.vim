@@ -23,15 +23,16 @@ export async function start(denops: Denops, path: string): Promise<void> {
 
 
 //Open file or sub directory
-export async function defie_open(denops: Denops): Promise<void> {
-  let filename = await denops.call("getline", ".") as string;
-  let path = await makeFullPath(denops,filename) as string;
+export async function defie_open(denops: Denops, direct:string): Promise<void> {
+  let path = await makeFullPath(denops,await denops.call("getline","."))
   let cmd:string = "edit";
 
   if (path.endsWith("/")) {
     cmd = "Defie";
-    deleteBuf(denops);
   }
+
+  if(direct === "tab") cmd = "tabedit"
+  if(direct === "vsplit") cmd = "vnew"
 
   callVimFeedKeys(denops, cmd, path.replace(/\/$/,""));
   await denops.cmd("setlocal modifiable");
@@ -50,15 +51,13 @@ export async function defie_up(denops: Denops): Promise<void> {
   callVimFeedKeys(denops, "Defie", path)
 }
 
-async function deleteBuf(denops: Denops): Promise<void> {
-  await denops.cmd("setlocal modifiable");
-  await denops.call("deletebufline", "%", 1, "$");
-}
 
 async function showHidden(denops: Denops): Promise<boolean> {
-  return (await globals.get(denops, "defie_show_hidden") as number === 1)
-    ? true
-    : false;
+  if (await globals.get(denops, "defie_show_hidden") === 1){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 async function makeFullPath(denops: Denops,filename:string): Promise<string> {

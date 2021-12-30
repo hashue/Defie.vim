@@ -1,1 +1,1 @@
-command! -nargs=1 Defie call denops#plugin#wait_async('Defie', {->denops#notify('Defie', 'call_Defie', [<q-args>])})
+command! -nargs=1 Defie call defie#call_defie(<q-args>,'init')
