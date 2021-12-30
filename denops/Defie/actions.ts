@@ -7,13 +7,14 @@ export async function start(denops: Denops, path: string): Promise<void> {
   path = await denops.call("expand", path);
   await buffers.set(denops, "base_path", path + "/");
 
-  await denops.cmd("setlocal filetype=defie buftype=nofile modifiable");
 
   let files: Array<string> = [];
 
   await util.entriesGetter(path, showHidden(denops), files);
 
   await batch(denops, async (denops:Denops) =>{
+    await denops.call("bufadd","Defie");
+    await denops.cmd("setlocal filetype=defie buftype=nofile modifiable nobuflisted");
     await denops.call("deletebufline", "%", 1, "$");
     await denops.call("setline", 1, files);
     await denops.cmd("setlocal nomodifiable");
