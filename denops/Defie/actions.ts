@@ -10,7 +10,7 @@ export async function start(denops: Denops, path: string): Promise<void> {
 
   let files: Array<string> = [];
 
-  await util.entriesGetter(path, showHidden(denops), files);
+  await util.entriesGetter(path, await showHidden(denops), files);
 
   await batch(denops, async (denops:Denops) =>{
     await denops.call("bufadd","Defie");

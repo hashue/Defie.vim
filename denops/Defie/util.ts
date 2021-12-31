@@ -26,9 +26,15 @@ export class DefieUtil {
     array = array.sort((a: string, b: string) => {
       a = a.toLowerCase();
       b = b.toLowerCase();
-      if (a.endsWith('/') && !b.endsWith('/') || a < b){
+      if (a.endsWith('/') && !b.endsWith('/')){
         return -1;
-      } else if (!a.endsWith('/') && b.endsWith('/') || a > b){
+      } else if (!a.endsWith('/') && b.endsWith('/')){
+        return 1;
+      }
+
+      if (a < b){
+        return -1;
+      } else if (a > b){
         return 1;
       }
     });
