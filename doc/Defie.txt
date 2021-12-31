@@ -1,19 +1,43 @@
 *Defie.vim* 		Vim/Neovim non-tree-view filer
 
-Version: beta
+Version: 1.0
 Author: Hasu
 License: MIT license
 
 CONTENTS						*defie-contents*
 
 Examples		|defie-example-settings|
+Interface		|defie-interface|
+  Commands		|defie-commands|
+  Functions		|defie-functions|
+
 ==============================================================================
+INTERFACE					*defie_interface*
+
+------------------------------------------------------------------------------
+COOMANDS					*defie-commands*
+:Defie {path}					*Defie*
+		Create a new Defie buffer.
+
+------------------------------------------------------------------------------
+FUNCTIONS					*defie-functions*
+
+defie#call_action({action},{diaection})		*defie#call_action()*
+	Fire {action} with {direction}.
+	You can specified "tab" or "vsplit" to {direction}.
+
+
+------------------------------------------------------------------------------
 EXAMPLES					*defie-example-settings*
 >
 	autocmd FileType defie call s:defie_settings()
 	function! s:defie_settings() abort
 		nnoremap <silent><buffer><expr> <CR>
 		\ defie#call_action('open')
+		nnoremap <silent><buffer><expr> t
+		\ defie#call_action('open','tab')
+		nnoremap <silent><buffer><expr> v
+		\ defie#call_action('open','vsplit')
 		nnoremap <silent><buffer><expr> <C-h>
 		\ defie#call_action('up')
 	endfunction
