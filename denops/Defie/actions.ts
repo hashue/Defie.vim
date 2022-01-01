@@ -1,4 +1,4 @@
-import { buffers, Denops, batch, globals } from "./deps.ts";
+import { batch, buffers, Denops, globals } from "./deps.ts";
 import { DefieUtil } from "./util.ts";
 
 export async function start(denops: Denops, path: string): Promise<void> {
@@ -7,34 +7,34 @@ export async function start(denops: Denops, path: string): Promise<void> {
   path = await denops.call("expand", path);
   await buffers.set(denops, "base_path", path + "/");
 
-
   let files: Array<string> = [];
 
   await util.entriesGetter(path, await showHidden(denops), files);
 
-  await batch(denops, async (denops:Denops) =>{
-    await denops.call("bufadd","Defie");
-    await denops.cmd("setlocal filetype=defie buftype=nofile modifiable nobuflisted");
+  await batch(denops, async (denops: Denops) => {
+    await denops.call("bufadd", "Defie");
+    await denops.cmd(
+      "setlocal filetype=defie buftype=nofile modifiable nobuflisted",
+    );
     await denops.call("deletebufline", "%", 1, "$");
     await denops.call("setline", 1, files);
     await denops.cmd("setlocal nomodifiable");
   });
 }
 
-
 //Open file or sub directory
-export async function defie_open(denops: Denops, direct:string): Promise<void> {
-  let path = await makeFullPath(denops,await denops.call("getline","."))
-  let cmd:string = "edit";
+export async function defieOpen(denops: Denops, direct: string): Promise<void> {
+  let path = await makeFullPath(denops, await denops.call("getline", "."));
+  let cmd: string = "edit";
 
   if (path.endsWith("/")) {
     cmd = "Defie";
   }
 
-  if(direct === "tab") cmd = "tabedit"
-  if(direct === "vsplit") cmd = "vnew"
+  if (direct === "tab") cmd = "tabedit";
+  if (direct === "vsplit") cmd = "vnew";
 
-  callVimFeedKeys(denops, cmd, path.replace(/\/$/,""));
+  callVimFeedKeys(denops, cmd, path.replace(/\/$/, ""));
   await denops.cmd("setlocal modifiable");
 }
 
@@ -48,23 +48,35 @@ export async function defie_up(denops: Denops): Promise<void> {
     ":p:h:h:gs!\\!/!",
   );
 
-  callVimFeedKeys(denops, "Defie", path)
+  callVimFeedKeys(denops, "Defie", path);
 }
 
+export async function defieToggleShowHidden(denops: Denops): Promise<void> {
+  if (await showHidden(denops)) {
+    await globals.set(denops, "defie_show_hidden", 0);
+  } else {
+    await globals.set(denops, "defie_show_hidden", 1);
+  }
+  callVimFeedKeys(denops, "Defie", ".");
+}
 
 async function showHidden(denops: Denops): Promise<boolean> {
-  if (await globals.get(denops, "defie_show_hidden") === 1){
+  if (await globals.get(denops, "defie_show_hidden") === 1) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
 
-async function makeFullPath(denops: Denops,filename:string): Promise<string> {
-  const base =  await buffers.get(denops, "base_path") as string;
-  return await denops.call("fnamemodify",`${base}${filename}`,":p");
+async function makeFullPath(denops: Denops, filename: string): Promise<string> {
+  const base = await buffers.get(denops, "base_path") as string;
+  return await denops.call("fnamemodify", `${base}${filename}`, ":p");
 }
 
-async function callVimFeedKeys(denops:Denops, cmd:string, arg:string): Promise<void> {
+async function callVimFeedKeys(
+  denops: Denops,
+  cmd: string,
+  arg: string,
+): Promise<void> {
   await denops.cmd(`call feedkeys(":\\<C-u>${cmd} ${arg}\\<CR>")`);
 }

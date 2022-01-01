@@ -1,4 +1,4 @@
-import { buffers, Denops, ensureString, globals } from "./deps.ts";
+import { Denops } from "./deps.ts";
 
 export class DefieUtil {
   constructor(public denops: Denops) {
@@ -26,15 +26,15 @@ export class DefieUtil {
     array = array.sort((a: string, b: string) => {
       a = a.toLowerCase();
       b = b.toLowerCase();
-      if (a.endsWith('/') && !b.endsWith('/')){
+      if (a.endsWith("/") && !b.endsWith("/")) {
         return -1;
-      } else if (!a.endsWith('/') && b.endsWith('/')){
+      } else if (!a.endsWith("/") && b.endsWith("/")) {
         return 1;
       }
 
-      if (a < b){
+      if (a < b) {
         return -1;
-      } else if (a > b){
+      } else if (a > b) {
         return 1;
       }
     });
