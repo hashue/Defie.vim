@@ -40,6 +40,8 @@ EXAMPLES					*defie-example-settings*
 		\ defie#call_action('open','vsplit')
 		nnoremap <silent><buffer><expr> <C-h>
 		\ defie#call_action('up')
+		nnoremap <silent><buffer><expr> !
+		\ defie#call_action('toggleShowHidden')
 	endfunction
 <
 ==============================================================================
