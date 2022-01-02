@@ -8,15 +8,18 @@ function! defie#call_defie(path,action) abort
   call denops#plugin#wait_async('Defie',{->denops#notify('Defie', 'call_Defie', [s:args])})
 endfunction
 
-function! defie#call_action(action,direction) abort
+function! defie#call_action(action,...) abort
   if &l:filetype !=# 'defie'
     return ''
   endif
-
   let s:args = {
         \ 'action': a:action,
-        \ 'direction':a:direction,
+        \ 'direction':'',
         \}
+
+  if a:0 >= 1
+    let s:args['direction'] = a:1
+  endif
 
   call denops#plugin#wait_async('Defie',{->denops#notify('Defie', 'call_Defie', [s:args])})
 endfunction
