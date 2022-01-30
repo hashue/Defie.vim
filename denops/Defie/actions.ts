@@ -5,14 +5,15 @@ export async function start(denops: Denops, path: string): Promise<void> {
   const util = new DefieUtil(denops);
 
   path = await denops.call("expand", path);
-  await buffers.set(denops, "base_path", path + "/");
 
   let files: Array<string> = [];
 
   await util.entriesGetter(path, await showHidden(denops), files);
 
+  const bufnr = (await denops.call("bufadd", "Defie")) as number;
   await batch(denops, async (denops: Denops) => {
-    await denops.call("bufadd", "Defie");
+    await denops.cmd(`buffer ${bufnr}`);
+    await buffers.set(denops, "base_path", path + "/");
     await denops.cmd(
       "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
     );
