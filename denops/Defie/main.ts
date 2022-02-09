@@ -1,8 +1,10 @@
 import { Denops } from "./deps.ts";
 import { defie_up, defieOpen, start } from "./actions.ts";
+import { DefieActions } from "./actions.ts";
 import { ArgType } from "./types.ts";
 
 export async function main(denops: Denops): Promise<void> {
+  const actions = new DefieActions();
   denops.dispatcher = {
     call_Defie(args: unknown): void {
       const validated_args = args as ArgType;
@@ -15,7 +17,7 @@ export async function main(denops: Denops): Promise<void> {
           defie_up(denops);
           break;
         default:
-          start(denops, validated_args.path);
+          actions.start(denops, validated_args.path);
       }
     },
   };

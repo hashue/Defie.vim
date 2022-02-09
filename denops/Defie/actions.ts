@@ -2,6 +2,67 @@ import { batch, buffers, Denops, globals } from "./deps.ts";
 import { DefieUtil } from "./util.ts";
 import { fn } from "./deps.ts";
 
+export class DefieActions {
+  basePath = "";
+
+  //
+  // Actions
+  //
+  async start(denops: Denops, path: string): Promise<void> {
+    this.basePath = await denops.call("expand", path);
+
+    await this.walk(this.basePath).then((files) => {
+      this.bufInit(denops, files);
+    });
+  }
+  async bufInit(denops: Denops, files: Array<string>): Promise<void> {
+    const bufnr = await fn.bufadd(denops, "Defie");
+    await batch(denops, async (denops: Denops) => {
+      await denops.cmd(`buffer ${bufnr}`);
+      await buffers.set(denops, "base_path", this.basePath + "/");
+      await denops.cmd(
+        "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
+      );
+      await denops.call("deletebufline", "%", 1, "$");
+      await denops.call("setline", 1, files);
+      await denops.cmd("setlocal nomodifiable");
+    });
+  }
+
+  async walk(path: string): Promise<Array<string>> {
+    let output: Array<string> = [];
+    for await (const entry of Deno.readDir(path)) {
+      if (entry.name.startsWith(".")) {
+        continue;
+      }
+
+      if (entry.isDirectory) entry.name += "/";
+      output.push(entry.name);
+    }
+    this.sortAlphabet(output);
+    return output;
+  }
+
+  sortAlphabet(array: Array<string>): Array<string> {
+    array = array.sort((a: string, b: string) => {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+      if (a.endsWith("/") && !b.endsWith("/")) {
+        return -1;
+      } else if (!a.endsWith("/") && b.endsWith("/")) {
+        return 1;
+      }
+
+      if (a < b) {
+        return -1;
+      } else if (a > b) {
+        return 1;
+      }
+    });
+    return array;
+  }
+}
+
 export async function start(denops: Denops, path: string): Promise<void> {
   const util = new DefieUtil(denops);
 
@@ -11,24 +72,6 @@ export async function start(denops: Denops, path: string): Promise<void> {
 
   await util.entriesGetter(path, files);
   await bufInit(denops, path, files);
-}
-
-export async function bufInit(
-  denops: Denops,
-  path: string,
-  files: Array<string>
-): Promise<void> {
-  const bufnr = await fn.bufadd(denops, "Defie");
-  await batch(denops, async (denops: Denops) => {
-    await denops.cmd(`buffer ${bufnr}`);
-    await buffers.set(denops, "base_path", path + "/");
-    await denops.cmd(
-      "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
-    );
-    await denops.call("deletebufline", "%", 1, "$");
-    await denops.call("setline", 1, files);
-    await denops.cmd("setlocal nomodifiable");
-  });
 }
 
 //Open file or sub directory
