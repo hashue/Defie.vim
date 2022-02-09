@@ -1,5 +1,6 @@
 import { batch, buffers, Denops, globals } from "./deps.ts";
 import { DefieUtil } from "./util.ts";
+import { fn } from "./deps.ts";
 
 export async function start(denops: Denops, path: string): Promise<void> {
   const util = new DefieUtil(denops);
@@ -9,8 +10,15 @@ export async function start(denops: Denops, path: string): Promise<void> {
   let files: Array<string> = [];
 
   await util.entriesGetter(path, files);
+  await bufInit(denops, path, files);
+}
 
-  const bufnr = (await denops.call("bufadd", "Defie")) as number;
+export async function bufInit(
+  denops: Denops,
+  path: string,
+  files: Array<string>
+): Promise<void> {
+  const bufnr = await fn.bufadd(denops, "Defie");
   await batch(denops, async (denops: Denops) => {
     await denops.cmd(`buffer ${bufnr}`);
     await buffers.set(denops, "base_path", path + "/");
@@ -28,10 +36,7 @@ export async function defieOpen(denops: Denops, direct: string): Promise<void> {
   let path = await makeFullPath(denops, await denops.call("getline", "."));
   let cmd: string = "edit";
 
-  if (path.endsWith("/")) {
-    cmd = "Defie";
-  }
-
+  if (path.endsWith("/")) cmd = "Defie";
   if (direct === "tab") cmd = "tabedit";
   if (direct === "vsplit") cmd = "vnew";
 
