@@ -7,11 +7,10 @@ export class DefieUtil {
 
   async entriesGetter(
     path: string,
-    showHidden: boolean,
-    output: Array<string>,
+    output: Array<string>
   ): Promise<Array<string>> {
     for await (const entry of Deno.readDir(path)) {
-      if (!showHidden && entry.name.startsWith(".")) {
+      if (entry.name.startsWith(".")) {
         continue;
       }
 

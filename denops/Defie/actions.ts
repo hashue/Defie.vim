@@ -8,7 +8,7 @@ export async function start(denops: Denops, path: string): Promise<void> {
 
   let files: Array<string> = [];
 
-  await util.entriesGetter(path, await showHidden(denops), files);
+  await util.entriesGetter(path, files);
 
   const bufnr = (await denops.call("bufadd", "Defie")) as number;
   await batch(denops, async (denops: Denops) => {
@@ -52,23 +52,6 @@ export async function defie_up(denops: Denops): Promise<void> {
   callVimFeedKeys(denops, "Defie", path);
 }
 
-export async function defieToggleShowHidden(denops: Denops): Promise<void> {
-  if (await showHidden(denops)) {
-    await globals.set(denops, "defie_show_hidden", 0);
-  } else {
-    await globals.set(denops, "defie_show_hidden", 1);
-  }
-  callVimFeedKeys(denops, "Defie", ".");
-}
-
-async function showHidden(denops: Denops): Promise<boolean> {
-  if ((await globals.get(denops, "defie_show_hidden")) === 1) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 async function makeFullPath(denops: Denops, filename: string): Promise<string> {
   const base = (await buffers.get(denops, "base_path")) as string;
   return await denops.call("fnamemodify", `${base}${filename}`, ":p");
@@ -79,5 +62,5 @@ async function callVimFeedKeys(
   cmd: string,
   arg: string
 ): Promise<void> {
-  await denops.cmd(`call feedkeys(":\\<C-u>${cmd} ${arg}\\<CR>")`);
+  await denops.cmd(`${cmd} ${arg}`);
 }
