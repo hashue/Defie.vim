@@ -2,6 +2,12 @@ import { Denops } from "./deps.ts";
 import { DefieActions } from "./actions.ts";
 import { ArgType } from "./types.ts";
 
+type ArgType = {
+  path: string;
+  action: string;
+  direction: string;
+};
+
 export async function main(denops: Denops): Promise<void> {
   const actions = new DefieActions();
   denops.dispatcher = {

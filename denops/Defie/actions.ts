@@ -38,7 +38,7 @@ export class DefieActions {
     path = await denops.call(
       "fnamemodify",
       path.replace(/\/$/, ""),
-      ":p:h:h:gs!\\!/!"
+      ":p:h:h:gs!\\!/!",
     );
 
     this.vimFeedKeys(denops, "Defie", path);
@@ -62,7 +62,7 @@ export class DefieActions {
     await batch(denops, async (denops: Denops) => {
       await denops.cmd(`buffer ${bufnr}`);
       await denops.cmd(
-        "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
+        "setlocal filetype=defie buftype=nofile modifiable nobuflisted",
       );
       await denops.call("deletebufline", "%", 1, "$");
       await denops.call("setline", 1, files);
@@ -103,7 +103,7 @@ export class DefieActions {
     return await denops.call(
       "fnamemodify",
       `${this.basePath}${filename}`,
-      ":p"
+      ":p",
     );
   }
 
