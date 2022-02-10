@@ -43,13 +43,14 @@ export class DefieActions {
 
     this.vimFeedKeys(denops, "Defie", path);
   }
+
   async toggleShowHidden(denops: Denops): Promise<void> {
     if (await this.showHidden(denops)) {
       await globals.set(denops, "defie_show_hidden", 0);
     } else {
       await globals.set(denops, "defie_show_hidden", 1);
     }
-    this.vimFeedKeys(denops, "Defie", ".");
+    this.vimFeedKeys(denops, "Defie", this.basePath);
   }
 
   //
@@ -97,6 +98,7 @@ export class DefieActions {
     });
     return array;
   }
+
   async fullPath(denops: Denops, filename: string): Promise<string> {
     return await denops.call(
       "fnamemodify",
