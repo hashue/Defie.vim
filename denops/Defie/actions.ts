@@ -27,7 +27,7 @@ export class DefieActions {
     if (direct === "tab") cmd = "tabedit";
     if (direct === "vsplit") cmd = "vnew";
 
-    this.vimFeedKeys(denops, cmd, path.replace(/\/$/, "")).then(() => {
+    this.excuteCmd(denops, cmd, path.replace(/\/$/, "")).then(() => {
       denops.cmd("setlocal modifiable buftype= ");
     });
   }
@@ -38,10 +38,10 @@ export class DefieActions {
     path = await denops.call(
       "fnamemodify",
       path.replace(/\/$/, ""),
-      ":p:h:h:gs!\\!/!",
+      ":p:h:h:gs!\\!/!"
     );
 
-    this.vimFeedKeys(denops, "Defie", path);
+    this.excuteCmd(denops, "Defie", path);
   }
 
   async toggleShowHidden(denops: Denops): Promise<void> {
@@ -50,7 +50,7 @@ export class DefieActions {
     } else {
       await globals.set(denops, "defie_show_hidden", 1);
     }
-    this.vimFeedKeys(denops, "Defie", this.basePath);
+    this.excuteCmd(denops, "Defie", this.basePath);
   }
 
   //
@@ -62,7 +62,7 @@ export class DefieActions {
     await batch(denops, async (denops: Denops) => {
       await denops.cmd(`buffer ${bufnr}`);
       await denops.cmd(
-        "setlocal filetype=defie buftype=nofile modifiable nobuflisted",
+        "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
       );
       await denops.call("deletebufline", "%", 1, "$");
       await denops.call("setline", 1, files);
@@ -103,11 +103,11 @@ export class DefieActions {
     return await denops.call(
       "fnamemodify",
       `${this.basePath}${filename}`,
-      ":p",
+      ":p"
     );
   }
 
-  async vimFeedKeys(denops: Denops, cmd: string, arg: string): Promise<void> {
+  async excuteCmd(denops: Denops, cmd: string, arg: string): Promise<void> {
     await denops.cmd(`${cmd} ${arg}`);
   }
 
