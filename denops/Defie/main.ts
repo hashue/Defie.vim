@@ -1,6 +1,5 @@
 import { Denops } from "./deps.ts";
 import { DefieActions } from "./actions.ts";
-import { ArgType } from "./types.ts";
 
 type ArgType = {
   path: string;
