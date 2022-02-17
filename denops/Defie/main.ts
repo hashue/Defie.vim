@@ -9,6 +9,7 @@ type ArgType = {
 
 export async function main(denops: Denops): Promise<void> {
   const actions = new DefieActions();
+
   denops.dispatcher = {
     call_Defie(args: unknown): void {
       const validated_args = args as ArgType;
@@ -22,6 +23,9 @@ export async function main(denops: Denops): Promise<void> {
           break;
         case "toggleShowHidden":
           actions.toggleShowHidden(denops);
+          break;
+        case "mkdir":
+          actions.mkdir(denops);
           break;
         default:
           actions.start(denops, validated_args.path);

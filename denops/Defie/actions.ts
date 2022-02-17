@@ -1,4 +1,4 @@
-import { batch, Denops, fn, globals } from "./deps.ts";
+import { batch, Denops, input, fn, globals } from "./deps.ts";
 
 export class DefieActions {
   basePath = "";
@@ -50,6 +50,12 @@ export class DefieActions {
     } else {
       await globals.set(denops, "defie_show_hidden", 1);
     }
+    this.excuteCmd(denops, "Defie", this.basePath);
+  }
+
+  async mkdir(denops: Denops): Promise<void> {
+    let name = (await input(denops, { prompt: "directory name: " })) as string;
+    Deno.mkdirSync(name);
     this.excuteCmd(denops, "Defie", this.basePath);
   }
 
