@@ -59,6 +59,15 @@ export class DefieActions {
     this.excuteCmd(denops, "Defie", this.basePath);
   }
 
+  async remove(denops: Denops): Promise<void> {
+    await this.fullPath(denops, await denops.call("getline", ".")).then(
+      (name: string) => {
+        Deno.removeSync(name);
+      }
+    );
+    this.excuteCmd(denops, "Defie", this.basePath);
+  }
+
   //
   //Utils
   //

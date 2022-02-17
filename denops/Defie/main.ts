@@ -27,6 +27,9 @@ export async function main(denops: Denops): Promise<void> {
         case "mkdir":
           actions.mkdir(denops);
           break;
+        case "rm":
+          actions.remove(denops);
+          break;
         default:
           actions.start(denops, validated_args.path);
       }

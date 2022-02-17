@@ -39,6 +39,8 @@ toggleShowHidden			*defie-actions-toggleShowHidden*
 
 mkdir					*defie-actions-mkdir*
 	make directory
+rm					*defie-actions-rm*
+	remove entry
 
 ------------------------------------------------------------------------------
 EXAMPLES					*defie-example-settings*
