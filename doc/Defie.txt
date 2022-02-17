@@ -26,6 +26,19 @@ defie#call_action({action},{diaection})		*defie#call_action()*
 	Fire {action} with {direction}.
 	You can specified "tab" or "vsplit" to {direction}.
 
+------------------------------------------------------------------------------
+ACTIONS					*defie-actions*
+open					*defie-actions-open*
+	open subdirectory or file
+
+up					*defie-actions-up*
+	move to parent directory
+
+toggleShowHidden			*defie-actions-toggleShowHidden*
+	toggle show hidden file (e.g. filename starts with '.' )
+
+mkdir					*defie-actions-mkdir*
+	make directory
 
 ------------------------------------------------------------------------------
 EXAMPLES					*defie-example-settings*
