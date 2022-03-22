@@ -9,7 +9,7 @@ export class DefieActions {
   //
 
   async start(denops: Denops, path: string): Promise<void> {
-    this.basePath = (await denops.call("expand", path)) + "/";
+    this.basePath = `${await denops.call("expand", path)}/`;
 
     walk(denops, this.basePath).then((files: Array<string>) => {
       bufInit(denops, files);
@@ -38,9 +38,9 @@ export class DefieActions {
 
   async toggleShowHidden(denops: Denops): Promise<void> {
     if (await showHidden(denops)) {
-      await globals.set(denops, "defie_show_hidden", false);
+      await globals.set(denops, "defie_show_hidden", 0);
     } else {
-      await globals.set(denops, "defie_show_hidden", true);
+      await globals.set(denops, "defie_show_hidden", 1);
     }
     await denops.cmd(denops, "Defie", this.basePath);
   }
@@ -55,8 +55,8 @@ export class DefieActions {
     await denops.call("getline", ".").then((name: string) => {
       input(denops, { prompt: "are you sure ?(y/n) : " }).then((res) => {
         if (res === "y") Deno.removeSync(Path.join(this.basePath, name));
+        denops.cmd(`Defie ${this.basePath}`);
       });
     });
-    await denops.cmd(`Defie ${this.basePath}`);
   }
 }

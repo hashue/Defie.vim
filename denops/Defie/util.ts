@@ -53,5 +53,6 @@ function sortAlphabet(array: Array<string>): Array<string> {
 }
 
 export async function showHidden(denops: Denops): Promise<boolean> {
-  return await globals.get(denops, "defie_show_hidden");
+  const stat = (await globals.get(denops, "defie_show_hidden")) as number;
+  return stat === 1 ? true : false;
 }
