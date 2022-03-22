@@ -2,6 +2,7 @@ export type { Denops } from "https://deno.land/x/denops_std@v3.0.0/mod.ts";
 export { batch } from "https://deno.land/x/denops_std@v3.0.0/batch/mod.ts";
 export { input } from "https://deno.land/x/denops_std@v3.0.0/helper/mod.ts";
 export * as fn from "https://deno.land/x/denops_std@v3.0.0/function/mod.ts";
+export * as Path from "https://deno.land/std@0.127.0/path/mod.ts";
 
 export {
   buffers,
