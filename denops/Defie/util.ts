@@ -1,4 +1,4 @@
-import { batch, Denops, fn, globals, input } from "./deps.ts";
+import { batch, Denops, fn, globals } from "./deps.ts";
 //
 //Utils
 //
@@ -52,18 +52,6 @@ function sortAlphabet(array: Array<string>): Array<string> {
   return array;
 }
 
-async function fullPath(denops: Denops, filename: string): Promise<string> {
-  return await denops.call("fnamemodify", `${this.basePath}${filename}`, ":p");
-}
-
-async function excuteCmd(
-  denops: Denops,
-  cmd: string,
-  arg: string
-): Promise<void> {
-  await denops.cmd(`${cmd} ${arg}`);
-}
-
-async function showHidden(denops: Denops): Promise<boolean> {
+export async function showHidden(denops: Denops): Promise<boolean> {
   return await globals.get(denops, "defie_show_hidden");
 }
