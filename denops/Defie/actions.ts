@@ -53,7 +53,9 @@ export class DefieActions {
 
   async remove(denops: Denops): Promise<void> {
     await denops.call("getline", ".").then((name: string) => {
-      Deno.removeSync(Path.join(this.basePath, name));
+      input(denops, { prompt: "are you sure ?(y/n) : " }).then((res) => {
+        if (res === "y") Deno.removeSync(Path.join(this.basePath, name));
+      });
     });
     await denops.cmd(`Defie ${this.basePath}`);
   }
