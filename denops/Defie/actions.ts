@@ -1,4 +1,5 @@
 import { batch, Denops, input, fn, globals } from "./deps.ts";
+import { bufInit, walk } from "./util.ts";
 
 export class DefieActions {
   basePath = "";
@@ -10,10 +11,8 @@ export class DefieActions {
   async start(denops: Denops, path: string): Promise<void> {
     this.basePath = (await denops.call("expand", path)) + "/";
 
-    await this.showHidden(denops).then((isShowHidden) => {
-      this.walk(this.basePath, isShowHidden).then((files) => {
-        this.bufInit(denops, files);
-      });
+    walk(denops, this.basePath).then((files) => {
+      bufInit(denops, files);
     });
   }
 
@@ -66,69 +65,5 @@ export class DefieActions {
       }
     );
     this.excuteCmd(denops, "Defie", this.basePath);
-  }
-
-  //
-  //Utils
-  //
-
-  async bufInit(denops: Denops, files: Array<string>): Promise<void> {
-    const bufnr = await fn.bufadd(denops, "Defie");
-    await batch(denops, async (denops: Denops) => {
-      await denops.cmd(`buffer ${bufnr}`);
-      await denops.cmd(
-        "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
-      );
-      await denops.call("deletebufline", "%", 1, "$");
-      await denops.call("setline", 1, files);
-      await denops.cmd("setlocal nomodifiable");
-    });
-  }
-
-  async walk(path: string, ignoreHidden: boolean): Promise<Array<string>> {
-    let output: Array<string> = [];
-    for await (const entry of Deno.readDir(path)) {
-      if (!ignoreHidden && entry.name.startsWith(".")) {
-        continue;
-      }
-
-      if (entry.isDirectory) entry.name += "/";
-      output.push(entry.name);
-    }
-    this.sortAlphabet(output);
-    return output;
-  }
-
-  sortAlphabet(array: Array<string>): Array<string> {
-    array = array.sort((a: string, b: string) => {
-      a = a.toLowerCase();
-      b = b.toLowerCase();
-      if (a.endsWith("/") && !b.endsWith("/")) {
-        return -1;
-      } else if (!a.endsWith("/") && b.endsWith("/")) {
-        return 1;
-      }
-
-      return a < b ? -1 : 1;
-    });
-    return array;
-  }
-
-  async fullPath(denops: Denops, filename: string): Promise<string> {
-    return await denops.call(
-      "fnamemodify",
-      `${this.basePath}${filename}`,
-      ":p"
-    );
-  }
-
-  async excuteCmd(denops: Denops, cmd: string, arg: string): Promise<void> {
-    await denops.cmd(`${cmd} ${arg}`);
-  }
-
-  async showHidden(denops: Denops): Promise<boolean> {
-    return ((await globals.get(denops, "defie_show_hidden")) as number) === 1
-      ? true
-      : false;
   }
 }
