@@ -42,7 +42,7 @@ export class DefieActions {
     } else {
       await globals.set(denops, "defie_show_hidden", 1);
     }
-    await denops.cmd(denops, "Defie", this.basePath);
+    await denops.cmd(`Defie ${this.basePath}`);
   }
 
   async mkdir(denops: Denops): Promise<void> {
