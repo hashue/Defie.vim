@@ -39,6 +39,8 @@ toggleShowHidden			*defie-actions-toggleShowHidden*
 
 mkdir					*defie-actions-mkdir*
 	make directory
+touch					*defie-actions-touch*
+	make reguler file
 rm					*defie-actions-rm*
 	remove entry
 
@@ -55,6 +57,10 @@ EXAMPLES					*defie-example-settings*
 		\ defie#call_action('open','vsplit')
 		nnoremap <silent><buffer><expr> <C-h>
 		\ defie#call_action('up')
+		nnoremap <silent><buffer><expr> m
+		\ defie#call_action('mkdir')
+		nnoremap <silent><buffer><expr> n
+		\ defie#call_action('touch')
 		nnoremap <silent><buffer><expr> !
 		\ defie#call_action('toggleShowHidden')
 	endfunction

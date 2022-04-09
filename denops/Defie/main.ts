@@ -26,6 +26,8 @@ export async function main(denops: Denops): Promise<void> {
           break;
         case "mkdir":
           actions.mkdir(denops);
+        case "touch":
+          actions.createFile(denops);
           break;
         case "rm":
           actions.remove(denops);

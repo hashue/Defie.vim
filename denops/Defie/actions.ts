@@ -51,6 +51,12 @@ export class DefieActions {
     await denops.cmd(`Defie ${this.basePath}`);
   }
 
+  async createFile(denops: Denops): Promise<void> {
+    let name = (await input(denops, { prompt: "file name: " })) as string;
+    Deno.create(Path.join(this.basePath, name));
+    await denops.cmd(`Defie ${this.basePath}`);
+  }
+
   async remove(denops: Denops): Promise<void> {
     await denops.call("getline", ".").then((name: string) => {
       input(denops, { prompt: "are you sure ?(y/n) : " }).then((res) => {
