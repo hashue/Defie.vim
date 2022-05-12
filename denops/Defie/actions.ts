@@ -11,6 +11,12 @@ export class DefieActions {
   async start(denops: Denops, path: string): Promise<void> {
     this.basePath = `${await denops.call("expand", path)}/`;
 
+    //for other scheme (e.g: file Uri scheme ...)
+    if(this.basePath.includes("://")){
+      let p = new URL(this.basePath);
+      this.basePath = p.pathname;
+    }
+
     walk(denops, this.basePath).then((files: Array<string>) => {
       bufInit(denops, files);
     });
