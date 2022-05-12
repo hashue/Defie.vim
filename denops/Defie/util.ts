@@ -1,17 +1,17 @@
-import { batch, Denops, fn, globals } from "./deps.ts";
+import { batch, Denops, fn, globals, Path } from "./deps.ts";
 //
 //Utils
 //
 
 export async function bufInit(
   denops: Denops,
-  files: Array<string>
+  files: Array<string>,
 ): Promise<void> {
   const bufnr = await fn.bufadd(denops, "Defie");
   await batch(denops, async (denops: Denops) => {
     await denops.cmd(`buffer ${bufnr}`);
     await denops.cmd(
-      "setlocal filetype=defie buftype=nofile modifiable nobuflisted"
+      "setlocal filetype=defie buftype=nofile modifiable nobuflisted",
     );
     await denops.call("deletebufline", "%", 1, "$");
     await denops.call("setline", 1, files);
@@ -21,7 +21,7 @@ export async function bufInit(
 
 export async function walk(
   denops: Denops,
-  path: string
+  path: string,
 ): Promise<Array<string>> {
   let output: Array<string> = [];
   const hiddenStat = await showHidden(denops);
@@ -55,4 +55,10 @@ function sortAlphabet(array: Array<string>): Array<string> {
 export async function showHidden(denops: Denops): Promise<boolean> {
   const stat = (await globals.get(denops, "defie_show_hidden")) as number;
   return stat === 1 ? true : false;
+}
+
+export function parseScheme(uri: string): string {
+  const { pathname, hostname } = new URL(uri);
+  uri = Path.fromFileUrl(new URL(pathname, `file://${hostname}/`));
+  return uri;
 }

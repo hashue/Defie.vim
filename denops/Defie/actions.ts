@@ -1,5 +1,5 @@
-import { Denops, input, globals, Path } from "./deps.ts";
-import { bufInit, walk, showHidden } from "./util.ts";
+import { Denops, globals, input, Path } from "./deps.ts";
+import { bufInit, parseScheme, showHidden, walk } from "./util.ts";
 
 export class DefieActions {
   basePath = "";
@@ -12,9 +12,8 @@ export class DefieActions {
     this.basePath = `${await denops.call("expand", path)}/`;
 
     //for other scheme (e.g: file Uri scheme ...)
-    if(this.basePath.includes("://")){
-      let p = new URL(this.basePath);
-      this.basePath = p.pathname;
+    if (this.basePath.includes("://")) {
+      this.basePath = parseScheme(this.basePath);
     }
 
     walk(denops, this.basePath).then((files: Array<string>) => {
@@ -27,7 +26,7 @@ export class DefieActions {
 
     path = await denops.call("fnameescape", path);
 
-    let cmd: string = "edit";
+    let cmd = "edit";
 
     if (path.endsWith("/")) cmd = "Defie";
     if (direct === "tab") cmd = "tabedit";
@@ -66,8 +65,9 @@ export class DefieActions {
   async remove(denops: Denops): Promise<void> {
     await denops.call("getline", ".").then((name: string) => {
       input(denops, { prompt: "are you sure ?(y/n) : " }).then((res) => {
-        if (res === "y")
+        if (res === "y") {
           Deno.removeSync(Path.join(this.basePath, name), { recursive: true });
+        }
         denops.cmd(`Defie ${this.basePath}`);
       });
     });
