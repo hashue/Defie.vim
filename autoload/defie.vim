@@ -4,13 +4,20 @@ let s:args = {
       \ 'direction': '',
       \ }
 
+function! s:exec() abort
+  let l:CallBack = function('denops#notify',[
+        \ 'Defie',
+        \ 'call_Defie',
+        \ [s:args],
+        \ ])
+
+  call denops#plugin#wait_async('Defie',l:CallBack)
+endfunction
+
 function! defie#call_defie(path,action) abort
   let s:args.path   = a:path
   let s:args.action = a:action
-
-  call denops#plugin#wait_async('Defie',{
-        \ ->denops#notify('Defie', 'call_Defie', [s:args])
-        \})
+  call s:exec()
 endfunction
 
 function! defie#call_action(action,...) abort
@@ -26,13 +33,10 @@ function! defie#call_action(action,...) abort
     let s:args.direction = ''
   endif
 
-  call denops#plugin#wait_async('Defie',{
-        \->denops#notify('Defie', 'call_Defie', [s:args])
-        \})
+  call s:exec()
 endfunction
 
 
-let s:is_windows = has('win32') || has('win64')
 
 
 " getcompletion
@@ -41,6 +45,8 @@ let s:is_windows = has('win32') || has('win64')
 " CmdLine   the entire command line
 " CursorPos the cursor position in it (byte index)
 "
+
+let s:is_windows = has('win32') || has('win64')
 
 function! defie#complete(arglead,cmdline,cursorpos) abort
   let _ = []
