@@ -1,8 +1,13 @@
+let s:args = {
+      \ 'path'     : '',
+      \ 'action'   : '',
+      \ 'direction': '',
+      \ }
+
 function! defie#call_defie(path,action) abort
-  let s:args = {
-        \ 'path':a:path,
-        \ 'action': a:action
-        \}
+  let s:args.path   = a:path
+  let s:args.action = a:action
+
   call denops#plugin#wait_async('Defie',{
         \ ->denops#notify('Defie', 'call_Defie', [s:args])
         \})
@@ -13,13 +18,12 @@ function! defie#call_action(action,...) abort
     return ''
   endif
 
-  let s:args = {
-        \ 'action': a:action,
-        \ 'direction':'',
-        \}
+  let s:args.action    = a:action
 
   if a:0 >= 1
-    let s:args['direction'] = a:1
+    let s:args.direction = a:1
+  else
+    let s:args.direction = ''
   endif
 
   call denops#plugin#wait_async('Defie',{
